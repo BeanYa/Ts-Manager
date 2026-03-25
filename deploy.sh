@@ -37,9 +37,10 @@ install_docker() {
 # ─── Docker 镜像加速 ───
 setup_mirror() {
   DAEMON_JSON="/etc/docker/daemon.json"
-  if [ -f "$DAEMON_JSON" ] && grep -q "registry-mirrors" "$DAEMON_JSON"; then
-    log "Docker 镜像加速已配置"
-    return
+
+  # 检查当前配置的镜像是否包含失效的中科大镜像
+  if [ -f "$DAEMON_JSON" ] && grep -q "ustc.edu.cn" "$DAEMON_JSON"; then
+    warn "检测到失效的中科大镜像配置，将更新为阿里云镜像..."
   fi
 
   log "配置 Docker 镜像加速..."
