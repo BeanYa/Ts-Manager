@@ -1,6 +1,9 @@
 services:
   ts-manager-app:
-    build: .
+    build:
+      context: .
+      args:
+        NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmmirror.com}
     container_name: ts-manager-app
     restart: unless-stopped
     ports:
