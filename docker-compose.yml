@@ -1,0 +1,58 @@
+services:
+  ts-manager-app:
+    build: .
+    container_name: ts-manager-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ts-manager-data:/app/data
+    environment:
+      - AUTH_TOKEN=${AUTH_TOKEN}
+      - DB_CLIENT=${DB_CLIENT:-better-sqlite3}
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=${DB_USER:-tsmanager}
+      - DB_PASS=${DB_PASS:-tsmanager_password}
+      - DB_NAME=${DB_NAME:-tsmanager}
+      - PORT=3000
+      - PUBLIC_IP=${PUBLIC_IP:-}
+      - CUSTOM_DOMAIN=${CUSTOM_DOMAIN:-}
+      - TS_IMAGE=${TS_IMAGE:-teamspeak}
+      - PORT_RANGE_START=${PORT_RANGE_START:-20000}
+    depends_on:
+      mysql:
+        condition: service_healthy
+        required: false
+    networks:
+      - ts-manager-net
+
+  mysql:
+    image: mysql:8.0
+    container_name: ts-manager-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS:-tsmanager_password}
+      MYSQL_DATABASE: ${DB_NAME:-tsmanager}
+      MYSQL_USER: ${DB_USER:-tsmanager}
+      MYSQL_PASSWORD: ${DB_PASS:-tsmanager_password}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - mysql
+    networks:
+      - ts-manager-net
+
+volumes:
+  ts-manager-data:
+  mysql-data:
+
+networks:
+  ts-manager-net:
+    driver: bridge

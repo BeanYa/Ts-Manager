@@ -1,0 +1,14 @@
+{
+  "name": "@ts-manager/shared",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo ok"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}
