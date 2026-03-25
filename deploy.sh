@@ -47,10 +47,9 @@ setup_mirror() {
   sudo tee "$DAEMON_JSON" > /dev/null <<'EOF'
 {
   "registry-mirrors": [
+    "https://qaddzvdr.mirror.aliyuncs.com",
     "https://mirror.ccs.tencentyun.com",
-    "https://docker.m.daocloud.io",
-    "https://dockerhub.azk8s.cn",
-    "https://docker.mirrors.ustc.edu.cn"
+    "https://docker.m.daocloud.io"
   ]
 }
 EOF
